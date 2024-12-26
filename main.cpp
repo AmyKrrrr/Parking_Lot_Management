@@ -18,6 +18,38 @@ void createVisitorAccount();
 
 int main()
 {
-    
+    Main_Menu();
     return 0;
+}
+
+void Main_Menu()
+{
+    int option;
+    do
+    {
+    cout << "PARKING LOT MANAGEMENT" << endl;
+    cout << "Login as:" << endl
+         << "1. Admin" << endl
+         << "2. Visitor" << endl
+         << "0. Exit" << endl;
+    cout << "Enter your choice: ";
+    cin >> option;
+
+    switch (option)
+    {
+    case 1:
+        // Admin_Login();
+        break;
+    case 2:
+        // Visitor_Login();
+        break;
+    case 0:
+        cout << "Exiting the program..." << endl;
+        exit(0);
+    default:
+        cout << "Invalid choice! Please TRY AGAIN" << endl;
+    }
+
+    } while(true);
+    
 }
