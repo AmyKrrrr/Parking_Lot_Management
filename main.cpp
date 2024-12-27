@@ -38,7 +38,7 @@ void Main_Menu()
     switch (option)
     {
     case 1:
-        // Admin_Login();
+        Admin_Login();
         break;
     case 2:
         // Visitor_Login();
@@ -52,4 +52,24 @@ void Main_Menu()
 
     } while(true);
     
+}
+
+void Admin_Login()
+{
+    cout << "\nADMIN LOGIN\n";
+    string Admin_ID, Password;
+    // Admin_ID = admin, Password = password
+    cout << "Enter Admin ID: ";
+    cin >> Admin_ID;
+    cout << "Enter Password: ";
+    cin >> Password;
+
+    if (Admin_ID == "admin" && Password == "password"){
+        // Admin_Menu();
+    }
+    else
+    {
+        cout << "Invalid ID/Password, Try Again\n";
+        Admin_Login();
+    }
 }
