@@ -73,3 +73,37 @@ void Admin_Login()
         Admin_Login();
     }
 }
+
+void Admin_Menu(){
+    int choice;
+    do {
+        cout << "\nAdmin Menu\n";
+        cout << "1. Check visitor history\n";
+        cout << "2. Edit entry/exit details\n";
+        cout << "3. Blacklist or remove a customer\n";
+        cout << "4. Edit parking lot availability\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                // Check_Visitor_History();
+                break;
+            case 2:
+                // Edit_Entry_Exit_Details();
+                break;
+            case 3:
+                // Black_List_Customer();
+                break;
+            case 4:
+                // Edit_Parking_Availability();
+                break;
+            case 5:
+                Main_Menu();
+                return;
+            default:
+                cout << "Invalid choice! Please try again.\n";
+        }
+    } while (true);
+}
