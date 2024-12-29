@@ -13,7 +13,7 @@ void Main_Menu();
     void Visitor_Login();
         bool Verify_Credentials(const string &filename, const string &id, const string &password);
         void Create_Visitor_Account();
-            void Save_Data_To_File(const string &filename, const vector<string> &data);
+        void Save_Data_To_File(const string &filename, const vector<string> &data);
             void Visitor_Menu();
                 void Check_Empty_Parking_Lots();
                 void Book_Parking_Lot();
@@ -172,4 +172,36 @@ void Save_Data_To_File(const string &filename, const vector<string> &data){
     file.close();
 }
 
-void Visitor_Menu(){}
+void Visitor_Menu(){
+    int choice;
+        do {
+            cout << "\nVisitor Menu\n";
+            cout << "1. Check empty parking lots\n";
+            cout << "2. Book a parking lot\n";
+            cout << "3. Input entry/exit time\n";
+            cout << "4. Check past visits\n";
+            cout << "5. Exit\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    // Check_Empty_Parking_Lots();
+                    break;
+                case 2:
+                    // Book_Parking_Lot();
+                    break;
+                case 3:
+                    // Input_Entry_Exit_Time();
+                    break;
+                case 4:
+                    // Check_Past_Visits();
+                    break;
+                case 5:
+                    Main_Menu();
+                    return;
+                default:
+                    cout << "Invalid choice! Please try again.\n";
+            }
+        } while (true);
+}
