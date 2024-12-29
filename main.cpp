@@ -1,20 +1,22 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 void Main_Menu();
-void Admin_Login();
-    void Admin_Menu();
-        void Check_Visitor_History();
-        void Edit_Entry_Exit_Details();
-        void Black_List_Customer();
-        void Edit_Parking_Availability();
-void Visitor_Login();
-void createVisitorAccount();
-    void Visitor_Menu();
-        void Check_Empty_Parking_Lots();
-        void Book_Parking_Lot();
-        void Input_Entry_Exit_Time();
-        void Check_Past_Visits();
+    void Admin_Login();
+        void Admin_Menu();
+            void Check_Visitor_History();
+            void Edit_Entry_Exit_Details();
+            void Black_List_Customer();
+            void Check_Parking_Availability();
+    void Visitor_Login();
+        bool Verify_Credentials(const string &filename, const string &id, const string &password);
+        void createVisitorAccount();
+            void Visitor_Menu();
+                void Check_Empty_Parking_Lots();
+                void Book_Parking_Lot();
+                void Input_Entry_Exit_Time();
+                void Check_Past_Visits();
 
 int main()
 {
@@ -41,7 +43,7 @@ void Main_Menu()
         Admin_Login();
         break;
     case 2:
-        // Visitor_Login();
+        Visitor_Login();
         break;
     case 0:
         cout << "Exiting the program..." << endl;
@@ -65,7 +67,7 @@ void Admin_Login()
     cin >> Password;
 
     if (Admin_ID == "admin" && Password == "password"){
-        // Admin_Menu();
+        Admin_Menu();
     }
     else
     {
@@ -81,7 +83,7 @@ void Admin_Menu(){
         cout << "1. Check visitor history\n";
         cout << "2. Edit entry/exit details\n";
         cout << "3. Blacklist or remove a customer\n";
-        cout << "4. Edit parking lot availability\n";
+        cout << "4. Check parking lot availability\n";
         cout << "5. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
@@ -97,7 +99,7 @@ void Admin_Menu(){
                 // Black_List_Customer();
                 break;
             case 4:
-                // Edit_Parking_Availability();
+                // Check_Parking_Availability();
                 break;
             case 5:
                 Main_Menu();
@@ -107,3 +109,29 @@ void Admin_Menu(){
         }
     } while (true);
 }
+
+void Visitor_Login()
+{
+    string visitorID, password;
+    cout << "Enter Visitor ID: ";
+    cin >> visitorID;
+    cout << "Enter Password: ";
+    cin >> password;
+
+    if (Verify_Credentials("visitor_data.txt", visitorID, password)) 
+    {
+        // Visitor_Menu();
+    } else {
+        cout << "Incorrect ID or Password.\n";
+        char choice;
+        cout << "Do you want to create a new visitor account? (y/n): ";
+        cin >> choice;
+        if (choice == 'y' || choice == 'Y') {
+            // createVisitorAccount();
+        } else {
+            Main_Menu();
+        }
+    }
+}
+
+bool Verify_Credentials(const string &filename, const string &id, const string &password) {}
