@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
 using namespace std;
 
 void Main_Menu();
@@ -11,7 +12,8 @@ void Main_Menu();
             void Check_Parking_Availability();
     void Visitor_Login();
         bool Verify_Credentials(const string &filename, const string &id, const string &password);
-        void createVisitorAccount();
+        void Create_Visitor_Account();
+            void Save_Data_To_File(const string &filename, const vector<string> &data);
             void Visitor_Menu();
                 void Check_Empty_Parking_Lots();
                 void Book_Parking_Lot();
@@ -127,7 +129,7 @@ void Visitor_Login()
         cout << "Do you want to create a new visitor account? (y/n): ";
         cin >> choice;
         if (choice == 'y' || choice == 'Y') {
-            // createVisitorAccount();
+            Create_Visitor_Account();
         } else {
             Main_Menu();
         }
@@ -146,6 +148,28 @@ bool Verify_Credentials(const string &filename, const string &id, const string &
     }
     file.close();
     return false;
+}
+
+void Create_Visitor_Account(){
+    string visitorID, password;
+    cout << "Enter new Visitor ID: ";
+    cin >> visitorID;
+    cout << "Enter new Password: ";
+    cin >> password;
+
+    vector<string> newVisitor = {visitorID, password};
+    Save_Data_To_File("visitor_data.txt", newVisitor);
+    cout << "Visitor account created successfully.\n";
+    Main_Menu();
+}
+
+void Save_Data_To_File(const string &filename, const vector<string> &data){
+    ofstream file(filename, ios::app);
+    for (const string &d : data) {
+        file << d << " ";
+    }
+    file << endl;
+    file.close();
 }
 
 void Visitor_Menu(){}
