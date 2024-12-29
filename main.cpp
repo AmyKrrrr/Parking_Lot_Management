@@ -120,7 +120,7 @@ void Visitor_Login()
 
     if (Verify_Credentials("visitor_data.txt", visitorID, password)) 
     {
-        // Visitor_Menu();
+        Visitor_Menu();
     } else {
         cout << "Incorrect ID or Password.\n";
         char choice;
@@ -134,4 +134,18 @@ void Visitor_Login()
     }
 }
 
-bool Verify_Credentials(const string &filename, const string &id, const string &password) {}
+bool Verify_Credentials(const string &filename, const string &id, const string &password){
+        ifstream file(filename);
+    string fileID, filePassword;
+
+    while (file >> fileID >> filePassword) {
+        if (fileID == id && filePassword == password) {
+            file.close();
+            return true;
+        }
+    }
+    file.close();
+    return false;
+}
+
+void Visitor_Menu(){}
