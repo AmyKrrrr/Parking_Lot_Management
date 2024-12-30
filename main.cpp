@@ -17,7 +17,7 @@ void Main_Menu();
         void Create_Visitor_Account();
         void Save_Data_To_File(const string &filename, const vector<string> &data);
             void Visitor_Menu();
-                void Check_Empty_Parking_Lots();
+                void Check_Empty_Parking_Lots(const string& filename);
                 void Book_Parking_Lot();
                 void Input_Entry_Exit_Time();
                 void Check_Past_Visits();
@@ -121,7 +121,7 @@ void Check_Parking_Availability(const string& filename){
     cout << "---------------------------------";
     ifstream file(filename);
     if (!file) {
-        cerr << "\nError: Unable to open the file." << endl;
+        cout << "\nError: Unable to open the file." << endl;
         return;
     }
 
@@ -219,7 +219,7 @@ void Visitor_Menu(){
 
             switch (choice) {
                 case 1:
-                    // Check_Empty_Parking_Lots();
+                    Check_Empty_Parking_Lots("Parking_status.txt");
                     break;
                 case 2:
                     // Book_Parking_Lot();
@@ -237,4 +237,32 @@ void Visitor_Menu(){
                     cout << "Invalid choice! Please try again.\n";
             }
         } while (true);
+}
+
+void Check_Empty_Parking_Lots(const string& filename){
+        cout << "---------------------------------";
+    ifstream file(filename);
+    if (!file) {
+        cout << "\nError: Unable to open the file." << endl;
+        return;
+    }
+
+    string line;
+    cout << "\nParking Lot Availability:" << endl;
+    // cout << "---------------------------------" << endl;
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string lot;
+        int status;
+
+        ss >> lot >> status;
+
+        if (status == 0) {
+            cout << lot << " is available." << endl;
+        } else {
+            cout << lot << " is occupied" << endl;
+        }
+    }
+    file.close();
 }
