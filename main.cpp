@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
+#include <sstream>
 using namespace std;
 
 void Main_Menu();
@@ -9,7 +11,7 @@ void Main_Menu();
             void Check_Visitor_History();
             void Edit_Entry_Exit_Details();
             void Black_List_Customer();
-            void Check_Parking_Availability();
+            void Check_Parking_Availability(const string& filename);
     void Visitor_Login();
         bool Verify_Credentials(const string &filename, const string &id, const string &password);
         void Create_Visitor_Account();
@@ -31,6 +33,7 @@ void Main_Menu()
     int option;
     do
     {
+    cout << "---------------------------------\n";
     cout << "PARKING LOT MANAGEMENT" << endl;
     cout << "Login as:" << endl
          << "1. Admin" << endl
@@ -60,7 +63,8 @@ void Main_Menu()
 
 void Admin_Login()
 {
-    cout << "\nADMIN LOGIN\n";
+    cout << "---------------------------------\n";
+    cout << "ADMIN LOGIN\n";
     string Admin_ID, Password;
     // Admin_ID = admin, Password = password
     cout << "Enter Admin ID: ";
@@ -81,7 +85,8 @@ void Admin_Login()
 void Admin_Menu(){
     int choice;
     do {
-        cout << "\nAdmin Menu\n";
+        cout << "---------------------------------\n";
+        cout << "Admin Menu\n";
         cout << "1. Check visitor history\n";
         cout << "2. Edit entry/exit details\n";
         cout << "3. Blacklist or remove a customer\n";
@@ -101,7 +106,7 @@ void Admin_Menu(){
                 // Black_List_Customer();
                 break;
             case 4:
-                // Check_Parking_Availability();
+                Check_Parking_Availability("Parking_status.txt");
                 break;
             case 5:
                 Main_Menu();
@@ -110,6 +115,34 @@ void Admin_Menu(){
                 cout << "Invalid choice! Please try again.\n";
         }
     } while (true);
+}
+
+void Check_Parking_Availability(const string& filename){
+    cout << "---------------------------------";
+    ifstream file(filename);
+    if (!file) {
+        cerr << "\nError: Unable to open the file." << endl;
+        return;
+    }
+
+    string line;
+    cout << "\nParking Lot Availability:" << endl;
+    // cout << "---------------------------------" << endl;
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string lot;
+        int status;
+
+        ss >> lot >> status;
+
+        if (status == 0) {
+            cout << lot << " is available." << endl;
+        } else {
+            cout << lot << " is occupied by visitor ID: " << status << endl;
+        }
+    }
+    file.close();
 }
 
 void Visitor_Login()
