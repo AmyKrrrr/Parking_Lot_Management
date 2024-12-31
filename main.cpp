@@ -18,7 +18,7 @@ void Main_Menu();
         void Save_Data_To_File(const string &filename, const vector<string> &data);
             void Visitor_Menu();
                 void Check_Empty_Parking_Lots(const string& filename);
-                void Book_Parking_Lot();
+                void Book_Parking_Lot(const string& parkingFile, const string& visitorFile);
                 void Input_Entry_Exit_Time();
                 void Check_Past_Visits();
 
@@ -147,13 +147,13 @@ void Check_Parking_Availability(const string& filename){
 
 void Visitor_Login()
 {
-    string visitorID, password;
+    string visitor_ID, password;
     cout << "Enter Visitor ID: ";
-    cin >> visitorID;
+    cin >> visitor_ID;
     cout << "Enter Password: ";
     cin >> password;
 
-    if (Verify_Credentials("visitor_data.txt", visitorID, password)) 
+    if (Verify_Credentials("visitor_data.txt", visitor_ID, password)) 
     {
         Visitor_Menu();
     } else {
@@ -184,13 +184,13 @@ bool Verify_Credentials(const string &filename, const string &id, const string &
 }
 
 void Create_Visitor_Account(){
-    string visitorID, password;
+    string visitor_ID, password;
     cout << "Enter new Visitor ID: ";
-    cin >> visitorID;
+    cin >> visitor_ID;
     cout << "Enter new Password: ";
     cin >> password;
 
-    vector<string> newVisitor = {visitorID, password};
+    vector<string> newVisitor = {visitor_ID, password};
     Save_Data_To_File("visitor_data.txt", newVisitor);
     cout << "Visitor account created successfully.\n";
     Main_Menu();
@@ -208,6 +208,7 @@ void Save_Data_To_File(const string &filename, const vector<string> &data){
 void Visitor_Menu(){
     int choice;
         do {
+            cout << "---------------------------------";
             cout << "\nVisitor Menu\n";
             cout << "1. Check empty parking lots\n";
             cout << "2. Book a parking lot\n";
@@ -222,7 +223,7 @@ void Visitor_Menu(){
                     Check_Empty_Parking_Lots("Parking_status.txt");
                     break;
                 case 2:
-                    // Book_Parking_Lot();
+                    Book_Parking_Lot("Parking_status.txt", "visitor_data.txt");
                     break;
                 case 3:
                     // Input_Entry_Exit_Time();
@@ -240,7 +241,7 @@ void Visitor_Menu(){
 }
 
 void Check_Empty_Parking_Lots(const string& filename){
-        cout << "---------------------------------";
+    cout << "---------------------------------";
     ifstream file(filename);
     if (!file) {
         cout << "\nError: Unable to open the file." << endl;
@@ -249,7 +250,6 @@ void Check_Empty_Parking_Lots(const string& filename){
 
     string line;
     cout << "\nParking Lot Availability:" << endl;
-    // cout << "---------------------------------" << endl;
 
     while (getline(file, line)) {
         stringstream ss(line);
@@ -265,4 +265,140 @@ void Check_Empty_Parking_Lots(const string& filename){
         }
     }
     file.close();
+}
+
+void Book_Parking_Lot(const string& parkingFile, const string& visitorFile) {
+    cout << "---------------------------------" << endl;
+
+    // Display available parking lots
+    ifstream file(parkingFile);
+    if (!file) {
+        cout << "\nERROR: Unable to open parking status file." << endl;
+        return;
+    }
+
+    vector<string> parkingLots; // Stores the lines from the file for updating
+    vector<string> availableLots; // Stores available lots
+    string line;
+    int count = 1;
+
+    cout << "\nAvailable Parking Lots:" << endl;
+
+    while (getline(file, line)) {
+        parkingLots.push_back(line); // Store all lines for later updates
+
+        stringstream ss(line);
+        string lot;
+        int status;
+
+        ss >> lot >> status;
+
+        if (status == 0) {
+            cout << count << ".\t" << lot << endl;
+            availableLots.push_back(lot); // Store available lot names
+            count++;
+        }
+    }
+    file.close();
+
+    if (availableLots.empty()) {
+        cout << "\nNo available parking lots!" << endl;
+        return;
+    }
+
+    // Ask user for their choice
+    int lotChoice;
+    cout << "Which lot do you want? (Enter number): ";
+    cin >> lotChoice;
+
+    if (lotChoice < 1 || lotChoice > availableLots.size()) {
+        cout << "Invalid choice. Please try again." << endl;
+        return;
+    }
+
+    string selectedLot = availableLots[lotChoice - 1];
+
+    // Get visitor ID from visitor_data.txt
+    ifstream visitorFileInput(visitorFile);
+    if (!visitorFileInput) {
+        cout << "\nERROR: Unable to open visitor data file." << endl;
+        return;
+    }
+
+    string visitor_ID, v_password;
+    cout << "\nEnter visitor ID: ";
+    cin >> visitor_ID;
+    cout << "\nEnter Passsword: ";
+    cin >> v_password;
+
+    bool visitorFound = false;
+    while (visitorFileInput >> visitor_ID >> v_password) {
+        visitorFound = true;
+    }
+    visitorFileInput.close();
+
+    if (!visitorFound) {
+        cout << "Visitor not found in database!" << endl;
+        return;
+    }
+
+    // Update the parking status
+    ofstream parkingFileOutput(parkingFile);
+    if (!parkingFileOutput) {
+        cout << "\nERROR: Unable to write to parking status file." << endl;
+        return;
+    }
+
+    for (const string& line : parkingLots) {
+        stringstream ss(line);
+        string lot;
+        int status;
+
+        ss >> lot >> status;
+
+        if (lot == selectedLot) {
+            parkingFileOutput << lot << " " << visitor_ID << endl; // Update with visitor ID
+        } else {
+            parkingFileOutput << line << endl; // Keep other lines unchanged
+        }
+    }
+
+    parkingFileOutput.close();
+    cout << "Parking lot " << selectedLot << " has been assigned to visitor ID: " << visitor_ID << endl;
+
+    cout << "Parking lot " << selectedLot << "is being used..." << endl;
+    string end;
+    cout << "Enter 'END' to exit the lot: " << endl;
+    cin >> end;
+
+    if (end == "END") {
+        // Reset the parking lot status to 0
+        ifstream resetFileInput(parkingFile);
+        vector<string> resetParkingLots;
+
+        while (getline(resetFileInput, line)) {
+            stringstream ss(line);
+            string lot;
+            int status;
+
+            ss >> lot >> status;
+
+            if (lot == selectedLot) {
+                resetParkingLots.push_back(lot + " 0"); // Reset to 0
+            } else {
+                resetParkingLots.push_back(line); // Keep other lines unchanged
+            }
+        }
+        resetFileInput.close();
+
+        ofstream resetFileOutput(parkingFile);
+        for (const string& resetLine : resetParkingLots) {
+            resetFileOutput << resetLine << endl;
+        }
+        resetFileOutput.close();
+
+        cout << "Parking lot " << selectedLot << " has been reset to available (0)." << endl;
+    } else {
+        cout << "Invalid input. The parking lot is not reset." << endl;
+    }
 }
