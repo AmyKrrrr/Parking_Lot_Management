@@ -16,9 +16,9 @@ void Main_Menu();
         bool Verify_Credentials(const string &filename, const string &id, const string &password);
         void Create_Visitor_Account();
         void Save_Data_To_File(const string &filename, const vector<string> &data);
-            void Visitor_Menu();
+            void Visitor_Menu(string& visitor_ID, string& password);
                 void Check_Empty_Parking_Lots(const string& filename);
-                void Book_Parking_Lot(const string& parkingFile, const string& visitorFile);
+                void Book_Parking_Lot(const string& parkingFile, const string& visitorFile, string& visitor_ID, string& password);
                 void Input_Entry_Exit_Time();
                 void Check_Past_Visits();
 
@@ -155,7 +155,7 @@ void Visitor_Login()
 
     if (Verify_Credentials("visitor_data.txt", visitor_ID, password)) 
     {
-        Visitor_Menu();
+        Visitor_Menu(visitor_ID, password);
     } else {
         cout << "Incorrect ID or Password.\n";
         char choice;
@@ -205,7 +205,7 @@ void Save_Data_To_File(const string &filename, const vector<string> &data){
     file.close();
 }
 
-void Visitor_Menu(){
+void Visitor_Menu(string& visitor_ID, string& password){
     int choice;
         do {
             cout << "---------------------------------";
@@ -223,7 +223,7 @@ void Visitor_Menu(){
                     Check_Empty_Parking_Lots("Parking_status.txt");
                     break;
                 case 2:
-                    Book_Parking_Lot("Parking_status.txt", "visitor_data.txt");
+                    Book_Parking_Lot("Parking_status.txt", "visitor_data.txt", visitor_ID, password);
                     break;
                 case 3:
                     // Input_Entry_Exit_Time();
@@ -267,7 +267,7 @@ void Check_Empty_Parking_Lots(const string& filename){
     file.close();
 }
 
-void Book_Parking_Lot(const string& parkingFile, const string& visitorFile) {
+void Book_Parking_Lot(const string& parkingFile, const string& visitorFile, string& visitor_ID, string& password) {
     cout << "---------------------------------" << endl;
 
     // Display available parking lots
@@ -325,14 +325,14 @@ void Book_Parking_Lot(const string& parkingFile, const string& visitorFile) {
         return;
     }
 
-    string visitor_ID, v_password;
-    cout << "\nEnter visitor ID: ";
-    cin >> visitor_ID;
-    cout << "\nEnter Passsword: ";
-    cin >> v_password;
+    // string visitor_ID, v_password;
+    // cout << "\nEnter visitor ID: ";
+    // cin >> visitor_ID;
+    // cout << "\nEnter Passsword: ";
+    // cin >> v_password;
 
     bool visitorFound = false;
-    while (visitorFileInput >> visitor_ID >> v_password) {
+    while (visitorFileInput >> visitor_ID >> password) {
         visitorFound = true;
     }
     visitorFileInput.close();
