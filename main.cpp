@@ -367,38 +367,44 @@ void Book_Parking_Lot(const string& parkingFile, const string& visitorFile, stri
     cout << "Parking lot " << selectedLot << " has been assigned to visitor ID: " << visitor_ID << endl;
 
     cout << "Parking lot " << selectedLot << "is being used..." << endl;
-    string end;
-    cout << "Enter 'END' to exit the lot: " << endl;
-    cin >> end;
+    while (true)
+    {
+        cout << "---------------------------------" << endl;
+        string end;
+        cout << "Enter 'END' to exit the lot: " << endl;
+        cin >> end;
 
-    if (end == "END") {
-        // Reset the parking lot status to 0
-        ifstream resetFileInput(parkingFile);
-        vector<string> resetParkingLots;
+        if (end == "END") {
+            // Reset the parking lot status to 0
+            ifstream resetFileInput(parkingFile);
+            vector<string> resetParkingLots;
 
-        while (getline(resetFileInput, line)) {
-            stringstream ss(line);
-            string lot;
-            int status;
+            while (getline(resetFileInput, line)) {
+                stringstream ss(line);
+                string lot;
+                int status;
 
-            ss >> lot >> status;
+                ss >> lot >> status;
 
-            if (lot == selectedLot) {
-                resetParkingLots.push_back(lot + " 0"); // Reset to 0
-            } else {
-                resetParkingLots.push_back(line); // Keep other lines unchanged
+                if (lot == selectedLot) {
+                    resetParkingLots.push_back(lot + " 0"); // Reset to 0
+                } else {
+                    resetParkingLots.push_back(line); // Keep other lines unchanged
+                }
             }
-        }
-        resetFileInput.close();
+            resetFileInput.close();
 
-        ofstream resetFileOutput(parkingFile);
-        for (const string& resetLine : resetParkingLots) {
-            resetFileOutput << resetLine << endl;
-        }
-        resetFileOutput.close();
+            ofstream resetFileOutput(parkingFile);
+            for (const string& resetLine : resetParkingLots) {
+                resetFileOutput << resetLine << endl;
+            }
+            resetFileOutput.close();
 
-        cout << "Parking lot " << selectedLot << " has been reset to available (0)." << endl;
-    } else {
+            cout << "Parking lot " << selectedLot << " has been reset to available (0)." << endl;
+            break;
+        } 
+        else {
         cout << "Invalid input. The parking lot is not reset." << endl;
+    }
     }
 }
